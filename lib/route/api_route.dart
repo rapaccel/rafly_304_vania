@@ -46,10 +46,13 @@ class ApiRoute implements Route {
     Router.put('/product-notes/{id}', productNotesController.update);
     Router.delete('/product-notes/{id}', productNotesController.destroy);
 
-    Router.get('/users', usersController.index);
+    Router.get('/users', usersController.index)
+        .middleware([AuthenticateMiddleware()]);
     Router.post('/users', usersController.store);
-    Router.put('/users/{id}', usersController.update);
-    Router.delete('/users/{id}', usersController.destroy);
+    Router.put('/users', usersController.update)
+        .middleware([AuthenticateMiddleware()]);
+    Router.delete('/users', usersController.destroy)
+        .middleware([AuthenticateMiddleware()]);
     Router.post('/login', usersController.login);
 
     Router.get("/home", homeController.index);

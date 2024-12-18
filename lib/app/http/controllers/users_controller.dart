@@ -3,7 +3,8 @@ import 'package:vania/vania.dart';
 
 class UsersController extends Controller {
   Future<Response> index() async {
-    final users = await User().query().get();
+    final id = Auth().id;
+    final users = await User().query().where('id', id.toString()).get();
     return Response.json(
         {'message': 'Berhasil Mendapatkan data Users', 'data': users});
   }
@@ -66,23 +67,26 @@ class UsersController extends Controller {
     return Response.json({});
   }
 
-  Future<Response> update(Request request, int id) async {
+  Future<Response> update(Request request) async {
     request.validate({
       'name': 'required',
       'email': 'required',
       'password': 'required',
     });
+    final id = Auth().id;
     final data = {
       'name': request.input('name'),
       'email': request.input('email'),
       'password': Hash().make(request.input('password').toString()),
     };
+
     await User().query().where('id', id.toString()).update(data);
     return Response.json(
         {'message': 'Berhasil Mengupdate data Users', 'data': data});
   }
 
-  Future<Response> destroy(int id) async {
+  Future<Response> destroy() async {
+    final id = Auth().id;
     await User().query().where('id', '=', id.toString()).delete();
     return Response.json({'message': 'Berhasil Menghapus data Users'});
   }
